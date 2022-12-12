@@ -1,20 +1,16 @@
-package com.example.lastedition;
+package com.example.lastdemo;
 
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -34,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView empty_imageview;
     TextView no_data;
 
-    MyDatabaseHelper myDB;
-    ArrayList<String> trip_id, trip_title, trip_description, trip_participant;
+    com.example.lastdemo.MyDatabaseHelper myDB;
+    ArrayList<String> trip_id, trip_title, trip_transport, trip_date, trip_returndate , trip_description, trip_participant;
     CustomAdapter customAdapter;
 
     @Override
@@ -55,15 +51,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myDB = new MyDatabaseHelper(MainActivity.this);
+        myDB = new com.example.lastdemo.MyDatabaseHelper(MainActivity.this);
         trip_id = new ArrayList<>();
+        trip_transport = new ArrayList<>();
+        trip_date = new ArrayList<>();
+        trip_returndate = new ArrayList<>();
         trip_title = new ArrayList<>();
         trip_description = new ArrayList<>();
         trip_participant = new ArrayList<>();
 
         storeDataInArrays();
 
-        customAdapter = new CustomAdapter(MainActivity.this,this, trip_id, trip_title, trip_description,
+        customAdapter = new CustomAdapter(MainActivity.this,this, trip_id, trip_title,trip_transport, trip_date, trip_returndate,  trip_description,
                 trip_participant);
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -87,8 +86,11 @@ public class MainActivity extends AppCompatActivity {
             while (cursor.moveToNext()){
                 trip_id.add(cursor.getString(0));
                 trip_title.add(cursor.getString(1));
-                trip_description.add(cursor.getString(2));
-                trip_participant.add(cursor.getString(3));
+                trip_transport.add(cursor.getString(2));
+                trip_date.add(cursor.getString(3));
+                trip_returndate.add(cursor.getString(4));
+                trip_description.add(cursor.getString(5));
+                trip_participant.add(cursor.getString(6));
             }
             empty_imageview.setVisibility(View.GONE);
             no_data.setVisibility(View.GONE);
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                MyDatabaseHelper myDB = new MyDatabaseHelper(MainActivity.this);
+                com.example.lastdemo.MyDatabaseHelper myDB = new com.example.lastdemo.MyDatabaseHelper(MainActivity.this);
                 myDB.deleteAllData();
                 //Refresh Activity
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -125,12 +127,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        builder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-            }
-        });
+                    }
+                });
         builder.create().show();
     }
 }
