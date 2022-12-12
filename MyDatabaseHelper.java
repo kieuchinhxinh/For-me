@@ -1,4 +1,4 @@
-package com.example.lastedition;
+package com.example.lastdemo;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,13 +12,17 @@ import androidx.annotation.Nullable;
 class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "Triplibrary.db";
+    private static final String DATABASE_NAME = "ExpenseDb.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "my_library";
+    private static final String TABLE_NAME = "data_expense";
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_TITLE = "trip_title";
+    private static final String COLUMN_TRANSPORT = "trip_transport";
+    private static final String COLUMN_TRIP_DATE = "trip_date";
+    private static final String COLUMN_TRIP_RETURN_DATE = "trip_return";
     private static final String COLUMN_DESCRIPTION = "trip_description";
+
     private static final String COLUMN_PARTICIPANT = "trip_participant";
 
     MyDatabaseHelper(@Nullable Context context) {
@@ -31,7 +35,10 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
         String query = "CREATE TABLE " + TABLE_NAME +
                         " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_TITLE + " TEXT, " +
-                        COLUMN_DESCRIPTION + " TEXT, " +
+                COLUMN_TRANSPORT + " TEXT, " +
+                COLUMN_TRIP_DATE + " TEXT, " +
+                COLUMN_TRIP_RETURN_DATE + " TEXT, " +
+                 COLUMN_DESCRIPTION + " TEXT, " +
                         COLUMN_PARTICIPANT + " INTEGER);";
         db.execSQL(query);
     }
@@ -41,11 +48,14 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void addTrip(String title, String description, int participant){
+    void addTrip(String title,String transport, String date,  String  returndate, String description, int participant){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_TITLE, title);
+        cv.put(COLUMN_TRANSPORT, transport);
+        cv.put(COLUMN_TRIP_DATE, date);
+        cv.put(COLUMN_TRIP_RETURN_DATE, returndate);
         cv.put(COLUMN_DESCRIPTION, description);
         cv.put(COLUMN_PARTICIPANT, participant);
         long result = db.insert(TABLE_NAME,null, cv);
@@ -67,10 +77,13 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    void updateData(String row_id, String title, String description, String participant){
+    void updateData(String row_id, String title,String transport, String date, String returndate, String description, String participant){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_TITLE, title);
+        cv.put(COLUMN_TRANSPORT, transport);
+        cv.put(COLUMN_TRIP_DATE, date);
+        cv.put(COLUMN_TRIP_RETURN_DATE, returndate);
         cv.put(COLUMN_DESCRIPTION, description);
         cv.put(COLUMN_PARTICIPANT, participant);
 
@@ -99,3 +112,4 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
 }
+
